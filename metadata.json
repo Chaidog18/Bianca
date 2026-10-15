@@ -1,0 +1,6 @@
+{
+  "name": "Will You Be My Girlfriend? 💗",
+  "description": "A minimalist, adorable, and interactive romantic website to ask someone special: Will you be my girlfriend? Complete with custom GIF uploads, floating animations, and shareable links.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
