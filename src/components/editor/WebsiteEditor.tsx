@@ -8,6 +8,7 @@ import {
   NoButtonStyle,
 } from '../../types/romantic';
 import { CuteGif } from '../CuteGif';
+import { cleanGifUrl } from '../../utils/sanitizeConfig';
 import {
   Upload,
   Trash2,
@@ -68,23 +69,24 @@ export const WebsiteEditor: React.FC<WebsiteEditorProps> = ({
   const [newGifName, setNewGifName] = useState('');
 
   const cutePresets = [
-    { name: 'Cat Cuddles', url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGJ0MWxwdWFzMG5oY3hpZzF5dXBzNTl2bmZ5b2w0ZzM5d3RscWRraCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/MDJ9IbxxvDUQM/giphy.gif' },
-    { name: 'Shy Blushing Kitten', url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOW82Z3RhN2R0NGhhZ20xdjZiaDlzNzVveWFudmh2d2tzbTN1MHFpciZlcD12MV9naWZzX3NlYXJjaCZjdD1n/ICOgUNjpvO0PC/giphy.gif' },
-    { name: 'Bunny Love Hug', url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzF2OXF1eWtpYm9tcjgyc2t6YTBxdWZzNWJ1NndvbnJ6bm42ZGlkdyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/uw0KqTWZPAHuE/giphy.gif' },
-    { name: 'Happy Dancing Bears', url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDV4eTV3MzYxNnFpdmE0cWNod3pkdjl0c2Fxb2M5bmhpZXhhb2p1NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3oz8xAFtqoOUUrsh7W/giphy.gif' },
-    { name: 'Blowing Kisses', url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTI1Z2g4YjhyejI4dGV0MWJocWVmaTZnbTZ2YW8xdGphajU4dG1scyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/111ebonMs90YLu/giphy.gif' },
-    { name: 'Playful Kitten Wiggle', url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMHhpOXJpNm85M3p6Z2F3eG5tdW12cnR0OHF3N3kyc2pva2F2c29xNiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/yFQ0ywZVQKI6I/giphy.gif' },
-    { name: 'Puppy Eyes Bear', url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMjR6ZnF2NnA3OXp1OXh1NHJqMnJ3cnhjc2Q1d3Zzd3U3MGpsNDV6YiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/TqPkvlZq8k4xW/giphy.gif' },
-    { name: 'Head Pat Love', url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzh6d2k0M2RzbzUzbWptbThpMnEzbmg4d3phMmF6a2FudnZ6bWh3diZlcD12MV9naWZzX3NlYXJjaCZjdD1n/5tmRHwTlHAA9WvKBDZ/giphy.gif' },
-    { name: 'Snuggle in Blanket', url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHIyb2s4Y2VsdG13dnFudjF6NHd5eW5ldDFkOGJ1MWg4bGN0Y3RyeCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/L2x1VvL4bT5N6/giphy.gif' },
-    { name: 'Sweet Forehead Kiss', url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZhcTJjcXJpZnlxb2JxdWlyNmZtZ3B2bzhyZzdwYmE0bnRzMHJ4biZlcD12MV9naWZzX3NlYXJjaCZjdD1n/G3va31oEEnIkM/giphy.gif' },
-    { name: 'Starry Night Together', url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjhzcGtndWpsNWNreG1vZWJ5aTZxZnNuN3g1N2txZmsxeTJqd3JpayZlcD12MV9naWZzX3NlYXJjaCZjdD1n/26FLdmIp6wJr91JAI/giphy.gif' },
-    { name: 'Heart Sparkle Flutter', url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYWZ5ZWU3NTVxMnN5bHBqYXExYWpqMWd5MnVwNHR2OTB5c3E3eGx5ayZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l4FGpP4lxGGgMqS5O/giphy.gif' },
+    { name: 'Shy Kitten (Bundled)', url: '/gifs/opening.gif' },
+    { name: 'Cat Cuddles (Bundled)', url: '/gifs/message.gif' },
+    { name: 'Puppy Eyes Bear (Bundled)', url: '/gifs/question.gif' },
+    { name: 'Dancing Hug Bears (Bundled)', url: '/gifs/celebration.gif' },
+    { name: 'Sweet Forehead Kiss (Bundled)', url: '/gifs/letter.gif' },
+    { name: 'Blowing Kisses (Bundled)', url: '/gifs/floating-hearts.gif' },
+    { name: 'Puppy Love (Bundled)', url: '/gifs/floating-puppy.gif' },
+    { name: 'Starry Night (Bundled)', url: '/gifs/floating-stars.gif' },
+    { name: 'Shy Blush Kitten (Online)', url: 'https://i.giphy.com/media/c76IJLufpNwSULPk77/giphy.gif' },
+    { name: 'Cat Hug (Online)', url: 'https://i.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif' },
+    { name: 'Sweet Bear Hug (Online)', url: 'https://i.giphy.com/media/vFKqnCdLPNOKc/giphy.gif' },
+    { name: 'Cat Kiss Love (Online)', url: 'https://i.giphy.com/media/kFgzrTt798d2w/giphy.gif' },
   ];
 
   const handleAddGif = (url?: string, name?: string) => {
-    const targetUrl = url || newGifUrl.trim();
-    if (!targetUrl) return;
+    const rawUrl = url || newGifUrl.trim();
+    if (!rawUrl) return;
+    const targetUrl = cleanGifUrl(rawUrl);
 
     const newGif: FloatingGifConfig = {
       id: `gif-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
@@ -211,17 +213,29 @@ export const WebsiteEditor: React.FC<WebsiteEditorProps> = ({
 
       try {
         const base64 = await readFileAsBase64(file);
-        const response = await fetch('/api/upload', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            filename: file.name,
-            dataUrl: base64,
-          }),
-        });
+        // On Vercel / serverless deployments, always use the base64 data URL directly
+        // so uploaded custom images/GIFs are completely self-contained and never fail with 404.
+        let assetUrl = base64;
 
-        const result = await response.json();
-        const assetUrl = result.success ? result.url : base64;
+        try {
+          const response = await fetch('/api/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              filename: file.name,
+              dataUrl: base64,
+            }),
+          });
+          if (response.ok) {
+            const result = await response.json();
+            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            if (result.success && isLocal && result.url) {
+              assetUrl = result.url;
+            }
+          }
+        } catch (uploadApiErr) {
+          // Safe fallback to base64
+        }
 
         const newGif: FloatingGifConfig = {
           id: `custom-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,

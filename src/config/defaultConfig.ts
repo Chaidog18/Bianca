@@ -8,7 +8,7 @@ export const DEFAULT_ROMANTIC_CONFIG: RomanticWebsiteConfig = {
     subtitle2: 'I hope it makes you smile.',
     buttonText: 'Open my heart ♡',
     footerText: 'made with love, just for you',
-    gifUrl: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOW82Z3RhN2R0NGhhZ20xdjZiaDlzNzVveWFudmh2d2tzbTN1MHFpciZlcD12MV9naWZzX3NlYXJjaCZjdD1n/ICOgUNjpvO0PC/giphy.gif', // cute shy cat looking up
+    gifUrl: '/gifs/opening.gif', // cute shy cat looking up
   },
   personalMessage: {
     title: 'A little note from me to you',
@@ -19,7 +19,7 @@ export const DEFAULT_ROMANTIC_CONFIG: RomanticWebsiteConfig = {
       "And honestly, I wouldn't mind making more memories with you.",
     ],
     buttonText: "There's one more thing... ♡",
-    gifUrl: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGJ0MWxwdWFzMG5oY3hpZzF5dXBzNTl2bmZ5b2w0ZzM5d3RscWRraCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/MDJ9IbxxvDUQM/giphy.gif', // sweet cuddly kitten
+    gifUrl: '/gifs/message.gif', // sweet cuddly kitten
   },
   question: {
     leadText: 'so… I have a question for you. ♡',
@@ -31,7 +31,7 @@ export const DEFAULT_ROMANTIC_CONFIG: RomanticWebsiteConfig = {
     allowRejection: false, // Viral prank mode: no way to reject, shrinking NO button, and infinite loop!
     shrinkNoButton: true,
     infiniteNoLoop: true,
-    gifUrl: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMjR6ZnF2NnA3OXp1OXh1NHJqMnJ3cnhjc2Q1d3Zzd3U3MGpsNDV6YiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/TqPkvlZq8k4xW/giphy.gif', // shy cute bear with puppy eyes
+    gifUrl: '/gifs/question.gif', // cute bear with beating heart
     playfulNoMessages: [
       'wait… are you sure? 🥺',
       'nuh-uh, that button doesn’t work! 🙈',
@@ -59,7 +59,7 @@ export const DEFAULT_ROMANTIC_CONFIG: RomanticWebsiteConfig = {
       title: 'Thank you for being honest with me ♡',
       message: 'I really appreciate you telling me your true feelings. Having you in my life already means the world to me, and nothing changes that.',
       subMessage: 'Thank you for being someone so special to me. ♡',
-      gifUrl: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMjR6ZnF2NnA3OXp1OXh1NHJqMnJ3cnhjc2Q1d3Zzd3U3MGpsNDV6YiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/TqPkvlZq8k4xW/giphy.gif',
+      gifUrl: '/gifs/rejection.gif',
       restartButtonText: 'Start over from beginning ♡',
     },
     gentleNoResponse: {
@@ -74,7 +74,7 @@ export const DEFAULT_ROMANTIC_CONFIG: RomanticWebsiteConfig = {
     subtitle2: 'so, does this mean I can officially call you my girlfriend? ♡',
     happyText: "I'M SO HAPPY IT'S YOU. ♡",
     buttonText: 'Read one last thing 💌',
-    gifUrl: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDV4eTV3MzYxNnFpdmE0cWNod3pkdjl0c2Fxb2M5bmhpZXhhb2p1NSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3oz8xAFtqoOUUrsh7W/giphy.gif', // happy dancing hugging bears
+    gifUrl: '/gifs/celebration.gif', // happy dancing hugging bears / love
     dates: {
       showMonthsary: true,
       officialStartDate: '2026-10-15',
@@ -95,7 +95,7 @@ export const DEFAULT_ROMANTIC_CONFIG: RomanticWebsiteConfig = {
     ],
     closing: 'with all my heart,',
     signature: 'your boyfriend-to-be ♡',
-    gifUrl: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzF2OXF1eWtpYm9tcjgyc2t6YTBxdWZzNWJ1NndvbnJ6bm42ZGlkdyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/uw0KqTWZPAHuE/giphy.gif', // cute bunny with heart
+    gifUrl: '/gifs/letter.gif', // cute sweet kiss
   },
   personalTouches: {
     recipientName: '',
@@ -115,7 +115,7 @@ export const DEFAULT_ROMANTIC_CONFIG: RomanticWebsiteConfig = {
     {
       id: 'default-float-1',
       name: 'Floating Bunny Hearts',
-      url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTI1Z2g4YjhyejI4dGV0MWJocWVmaTZnbTZ2YW8xdGphajU4dG1scyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/111ebonMs90YLu/giphy.gif',
+      url: '/gifs/floating-hearts.gif',
       displayMode: 'corner',
       size: 90,
       opacity: 0.85,
@@ -130,8 +130,8 @@ export const DEFAULT_ROMANTIC_CONFIG: RomanticWebsiteConfig = {
     },
     {
       id: 'default-float-2',
-      name: 'Happy Cat Peeking',
-      url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMHhpOXJpNm85M3p6Z2F3eG5tdW12cnR0OHF3N3kyc2pva2F2c29xNiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/yFQ0ywZVQKI6I/giphy.gif',
+      name: 'Happy Puppy Love',
+      url: '/gifs/floating-puppy.gif',
       displayMode: 'floating',
       size: 85,
       opacity: 0.8,
@@ -146,8 +146,8 @@ export const DEFAULT_ROMANTIC_CONFIG: RomanticWebsiteConfig = {
     },
     {
       id: 'default-float-3',
-      name: 'Surprise Love Heart',
-      url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGJ0MWxwdWFzMG5oY3hpZzF5dXBzNTl2bmZ5b2w0ZzM5d3RscWRraCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/MDJ9IbxxvDUQM/giphy.gif',
+      name: 'Surprise Starry Kiss',
+      url: '/gifs/floating-stars.gif',
       displayMode: 'clickToShow',
       size: 110,
       opacity: 0.95,

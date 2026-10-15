@@ -283,7 +283,9 @@ app.post('/api/github/push', (req, res) => {
   }
 });
 
-// Mount Vite or static files
+// Mount public static files and Vite/dist
+app.use(express.static(path.resolve(__dirname, 'public')));
+
 async function startServer() {
   const isDev = process.env.NODE_ENV !== 'production';
 

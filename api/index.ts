@@ -6,7 +6,7 @@ import path from 'path';
 const app = express();
 
 // Use /tmp for serverless environments like Vercel
-const isVercel = process.env.VERCEL === '1';
+const isVercel = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NODE_ENV === 'production');
 const BASE_STORAGE_DIR = isVercel ? '/tmp' : process.cwd();
 const UPLOADS_DIR = path.join(BASE_STORAGE_DIR, 'uploads');
 const DATA_DIR = path.join(BASE_STORAGE_DIR, 'data');

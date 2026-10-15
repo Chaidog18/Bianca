@@ -12,9 +12,10 @@ import { AudioPlayer } from './components/AudioPlayer';
 import { WebsiteEditor } from './components/editor/WebsiteEditor';
 import { GitHubModal } from './components/GitHubModal';
 import { SlidersHorizontal, Heart, EyeOff, Loader2, Github } from 'lucide-react';
+import { sanitizeConfig } from './utils/sanitizeConfig';
 
 export default function App() {
-  const [config, setConfig] = useState<RomanticWebsiteConfig>(DEFAULT_ROMANTIC_CONFIG);
+  const [config, setConfig] = useState<RomanticWebsiteConfig>(() => sanitizeConfig(DEFAULT_ROMANTIC_CONFIG));
   const [currentSection, setCurrentSection] = useState<TargetSection>('opening');
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isGitHubModalOpen, setIsGitHubModalOpen] = useState(false);
@@ -22,9 +23,25 @@ export default function App() {
   const [isLoadingShared, setIsLoadingShared] = useState(false);
   const [sharedSiteId, setSharedSiteId] = useState<string | null>(null);
 
-  // Check URL parameters on mount (?love=xyz or /love/xyz)
+  // Check URL parameters on mount (?data=..., ?love=xyz or /love/xyz)
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
+    const dataParam = urlParams.get('data');
+    if (dataParam) {
+      try {
+        const json = decodeURIComponent(escape(atob(dataParam)));
+        const parsed = JSON.parse(json);
+        setConfig(sanitizeConfig(parsed));
+        return;
+      } catch (e) {
+        try {
+          const parsed = JSON.parse(decodeURIComponent(dataParam));
+          setConfig(sanitizeConfig(parsed));
+          return;
+        } catch (e2) {}
+      }
+    }
+
     const loveId = urlParams.get('love');
     const pathMatch = window.location.pathname.match(/\/love\/([a-zA-Z0-9_-]+)/);
     const targetId = loveId || (pathMatch ? pathMatch[1] : null);
@@ -41,7 +58,7 @@ export default function App() {
         })
         .then((data) => {
           if (data.success && data.site?.config) {
-            setConfig(data.site.config);
+            setConfig(sanitizeConfig(data.site.config));
           }
         })
         .catch((err) => {
@@ -49,7 +66,7 @@ export default function App() {
           const cached = localStorage.getItem(`love_site_${targetId}`);
           if (cached) {
             try {
-              setConfig(JSON.parse(cached));
+              setConfig(sanitizeConfig(JSON.parse(cached)));
             } catch (e) {
               console.error('Failed to parse cached site', e);
             }
@@ -63,7 +80,7 @@ export default function App() {
       const savedDraft = localStorage.getItem('romantic_website_draft');
       if (savedDraft) {
         try {
-          setConfig(JSON.parse(savedDraft));
+          setConfig(sanitizeConfig(JSON.parse(savedDraft)));
         } catch (e) {
           console.warn('Could not load local draft', e);
         }

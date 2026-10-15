@@ -1,13 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Heart } from 'lucide-react';
+import { cleanGifUrl } from '../utils/sanitizeConfig';
 
 interface CuteGifProps {
   src: string;
   alt: string;
   className?: string;
-  fallbackType?: 'cat' | 'hug' | 'shy' | 'bunny';
+  fallbackType?: 'cat' | 'hug' | 'shy' | 'bunny' | 'bear' | 'celebration' | 'letter' | 'puppy' | 'stars';
   onClick?: () => void;
 }
+
+const LOCAL_MAP: Record<string, string> = {
+  cat: '/gifs/opening.gif',
+  shy: '/gifs/opening.gif',
+  hug: '/gifs/message.gif',
+  bear: '/gifs/question.gif',
+  celebration: '/gifs/celebration.gif',
+  letter: '/gifs/letter.gif',
+  bunny: '/gifs/letter.gif',
+  puppy: '/gifs/floating-puppy.gif',
+  stars: '/gifs/floating-stars.gif',
+};
 
 export const CuteGif: React.FC<CuteGifProps> = ({
   src,
@@ -16,8 +29,56 @@ export const CuteGif: React.FC<CuteGifProps> = ({
   fallbackType = 'cat',
   onClick,
 }) => {
+  const defaultLocalGif = LOCAL_MAP[fallbackType] || '/gifs/opening.gif';
+  const initialSafeSrc = cleanGifUrl(src, (fallbackType === 'hug' ? 'message' : fallbackType === 'bear' ? 'question' : fallbackType === 'celebration' ? 'celebration' : fallbackType === 'letter' ? 'letter' : 'opening') as any);
+
+  const [currentSrc, setCurrentSrc] = useState<string>(initialSafeSrc);
   const [hasError, setHasError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [attemptedLocal, setAttemptedLocal] = useState(false);
+
+  // Synchronize when the src prop changes from outside (e.g. editor change)
+  useEffect(() => {
+    const nextSafe = cleanGifUrl(src, (fallbackType === 'hug' ? 'message' : fallbackType === 'bear' ? 'question' : fallbackType === 'celebration' ? 'celebration' : fallbackType === 'letter' ? 'letter' : 'opening') as any);
+    setCurrentSrc(nextSafe);
+    setHasError(false);
+    setIsLoaded(false);
+    setAttemptedLocal(nextSafe.startsWith('/gifs/'));
+  }, [src, fallbackType]);
+
+  const handleImageError = () => {
+    if (!attemptedLocal && currentSrc !== defaultLocalGif) {
+      setAttemptedLocal(true);
+      setCurrentSrc(defaultLocalGif);
+    } else {
+      setHasError(true);
+    }
+  };
+
+  const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+
+    // Detect Giphy's "THIS CONTENT IS NOT AVAILABLE" image (exactly 480x270 px)
+    const isGiphyPlaceholder =
+      currentSrc.includes('giphy.com') &&
+      img.naturalWidth === 480 &&
+      img.naturalHeight === 270;
+
+    const isZeroDimension = img.naturalWidth === 0 || img.naturalHeight === 0;
+
+    if (isGiphyPlaceholder || isZeroDimension) {
+      if (!attemptedLocal && currentSrc !== defaultLocalGif) {
+        setAttemptedLocal(true);
+        setCurrentSrc(defaultLocalGif);
+        return;
+      } else {
+        setHasError(true);
+        return;
+      }
+    }
+
+    setIsLoaded(true);
+  };
 
   // High fidelity animated SVG fallback in case network restricts GIF loading
   const renderSvgFallback = () => {
@@ -131,11 +192,13 @@ export const CuteGif: React.FC<CuteGifProps> = ({
         renderSvgFallback()
       ) : (
         <img
-          src={src}
+          src={currentSrc}
           alt={alt}
           loading="lazy"
-          onLoad={() => setIsLoaded(true)}
-          onError={() => setHasError(true)}
+          referrerPolicy="no-referrer"
+          crossOrigin="anonymous"
+          onLoad={handleImageLoad}
+          onError={handleImageError}
           className={`w-full h-full object-contain rounded-2xl transition-opacity duration-500 ${
             isLoaded ? 'opacity-100' : 'opacity-0'
           }`}
