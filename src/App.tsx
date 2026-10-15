@@ -13,6 +13,7 @@ import { WebsiteEditor } from './components/editor/WebsiteEditor';
 import { GitHubModal } from './components/GitHubModal';
 import { SlidersHorizontal, Heart, EyeOff, Loader2, Github } from 'lucide-react';
 import { sanitizeConfig } from './utils/sanitizeConfig';
+import grasslandBg from './assets/images/peaceful_grassland_meadow_1792057141049.jpg';
 
 export default function App() {
   const [config, setConfig] = useState<RomanticWebsiteConfig>(() => sanitizeConfig(DEFAULT_ROMANTIC_CONFIG));
@@ -135,11 +136,14 @@ export default function App() {
     <div className="relative h-screen h-[100dvh] max-h-screen bg-[#FAF5FF] text-[#3B0764] flex flex-col justify-between selection:bg-[#E9D5FF] selection:text-[#581C87] overflow-hidden">
       {/* Peaceful Scenic Grassland Backdrop */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Scenic Grassland Hills Gradient Base Layer for instant load */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#E0E7FF] via-[#F3E8FF] to-[#86EFAC]/40" />
+
         {/* High-fidelity Grassland Meadow Panoramic Wallpaper */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 scale-[1.01]"
           style={{
-            backgroundImage: `url('/src/assets/images/peaceful_grassland_meadow_1792057141049.jpg')`,
+            backgroundImage: `url(${grasslandBg}), url('/images/grassland.jpg')`,
           }}
         />
         {/* Soft peaceful atmospheric lighting overlay: gentle sun rays & serene violet hue */}
