@@ -10,12 +10,14 @@ import { FloatingGifsOverlay } from './components/FloatingGifsOverlay';
 import { FloatingDecorations } from './components/FloatingDecorations';
 import { AudioPlayer } from './components/AudioPlayer';
 import { WebsiteEditor } from './components/editor/WebsiteEditor';
-import { SlidersHorizontal, Heart, EyeOff, Loader2 } from 'lucide-react';
+import { GitHubModal } from './components/GitHubModal';
+import { SlidersHorizontal, Heart, EyeOff, Loader2, Github } from 'lucide-react';
 
 export default function App() {
   const [config, setConfig] = useState<RomanticWebsiteConfig>(DEFAULT_ROMANTIC_CONFIG);
   const [currentSection, setCurrentSection] = useState<TargetSection>('opening');
   const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [isGitHubModalOpen, setIsGitHubModalOpen] = useState(false);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [isLoadingShared, setIsLoadingShared] = useState(false);
   const [sharedSiteId, setSharedSiteId] = useState<string | null>(null);
@@ -184,6 +186,15 @@ export default function App() {
               <span>Personalize & Share ♡</span>
             </button>
           )}
+
+          <button
+            onClick={() => setIsGitHubModalOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#3B0764] bg-white/95 backdrop-blur-md rounded-full shadow-xs border border-[#DDD6FE] hover:bg-[#FAF5FF] hover:border-[#C084FC] hover:shadow transition-all cursor-pointer"
+            title="Upload code to GitHub or Download .ZIP"
+          >
+            <Github className="w-3.5 h-3.5 text-[#3B0764]" />
+            <span className="hidden sm:inline">GitHub / Export</span>
+          </button>
         </div>
       </header>
 
@@ -265,6 +276,12 @@ export default function App() {
           }}
         />
       )}
+
+      {/* GitHub & Project Export Modal */}
+      <GitHubModal
+        isOpen={isGitHubModalOpen}
+        onClose={() => setIsGitHubModalOpen(false)}
+      />
     </div>
   );
 }

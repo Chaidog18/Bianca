@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import crypto from 'crypto';
+import { execSync, spawn } from 'child_process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -183,6 +184,103 @@ app.delete('/api/site/:id', (req, res) => {
     return res.json({ success: true, message: 'Website removed' });
   }
   return res.status(404).json({ success: false, error: 'Site not found' });
+});
+
+// 6. Download full project as ZIP file
+app.get('/api/download-zip', (req, res) => {
+  try {
+    const pyCode = `
+import zipfile, os, sys
+
+z = zipfile.ZipFile(sys.stdout.buffer, 'w', zipfile.ZIP_DEFLATED)
+for root, dirs, files in os.walk('.'):
+    dirs[:] = [d for d in dirs if d not in ('node_modules', '.git', 'dist', 'coverage', '.cache')]
+    for f in files:
+        if f.endswith('.log') or f == '.env':
+            continue
+        full_path = os.path.join(root, f)
+        rel_path = os.path.relpath(full_path, '.')
+        z.write(full_path, rel_path)
+z.close()
+`;
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', 'attachment; filename="romantic-proposal-website.zip"');
+    const py = spawn('python3', ['-c', pyCode], { cwd: __dirname });
+    py.stdout.pipe(res);
+    py.stderr.on('data', (d) => {
+      console.error('ZIP generation stderr:', d.toString());
+    });
+  } catch (err: any) {
+    console.error('ZIP download error:', err);
+    res.status(500).json({ success: false, error: 'Failed to generate ZIP archive' });
+  }
+});
+
+// 7. Push project to GitHub repository
+app.post('/api/github/push', (req, res) => {
+  try {
+    const { repoUrl, token, branch = 'main' } = req.body;
+    if (!repoUrl || !token) {
+      return res.status(400).json({ success: false, error: 'Repository URL and GitHub Personal Access Token are required.' });
+    }
+
+    const match = repoUrl.trim().match(/github\.com\/([a-zA-Z0-9_.-]+)\/([a-zA-Z0-9_.-]+?)(\.git)?$/);
+    if (!match) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid GitHub repository URL. Must be in format: https://github.com/username/repository-name',
+      });
+    }
+
+    const owner = match[1];
+    const repo = match[2];
+    const cleanRepoUrl = `https://github.com/${owner}/${repo}`;
+    const cleanToken = token.trim();
+    const authenticatedUrl = `https://${cleanToken}@github.com/${owner}/${repo}.git`;
+
+    // Commit any uncommitted changes first
+    execSync('git add .', { cwd: __dirname });
+    try {
+      execSync('git commit -m "Update romantic proposal applet" || true', { cwd: __dirname });
+    } catch {
+      // Nothing new to commit
+    }
+
+    // Set branch to main
+    try {
+      execSync(`git branch -M ${branch}`, { cwd: __dirname });
+    } catch {}
+
+    // Set origin
+    try {
+      execSync('git remote remove origin', { cwd: __dirname });
+    } catch {}
+    execSync(`git remote add origin ${authenticatedUrl}`, { cwd: __dirname });
+
+    // Push with force to ensure the clean state overwrites or initializes main
+    execSync(`git push -u origin ${branch} --force`, { cwd: __dirname });
+
+    // Clean remote URL so token is never stored in .git/config
+    try {
+      execSync(`git remote set-url origin ${cleanRepoUrl}.git`, { cwd: __dirname });
+    } catch {}
+
+    return res.json({
+      success: true,
+      message: `Successfully uploaded code to GitHub repository ${owner}/${repo}!`,
+      repoUrl: cleanRepoUrl,
+      branch,
+    });
+  } catch (error: any) {
+    console.error('GitHub push error:', error);
+    // Sanitize any token from error message
+    const rawMsg = error.stderr ? error.stderr.toString() : (error.message || 'Push failed');
+    const safeError = rawMsg.replace(/[a-zA-Z0-9_.-]{20,}/g, '***');
+    return res.status(500).json({
+      success: false,
+      error: `GitHub push failed: ${safeError}. Please make sure the repository exists and your Personal Access Token has 'repo' write permissions.`,
+    });
+  }
 });
 
 // Mount Vite or static files
