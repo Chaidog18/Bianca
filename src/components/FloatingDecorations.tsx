@@ -132,27 +132,28 @@ const CuteAvoidingButterfly: React.FC<{ data: ButterflyData; index: number }> = 
         const dyFood = foodState.y - state.y;
         const distToFood = Math.hypot(dxFood, dyFood);
 
-        if (distToFood > 18) {
-          // Eagerly fly toward the clicked food position!
+        if (distToFood > 16) {
+          // Gently flutter toward the clicked food position at a calm, relaxed pace
           const toFoodAngle = Math.atan2(dyFood, dxFood);
-          const foodSpeed = Math.min(260, 60 + (320 / (distToFood + 20)) * 140);
+          // Slow, graceful cruising speed towards food
+          const foodSpeed = 38 + (index % 5) * 6; // 38 - 62 px/s (very gentle and cute!)
           const targetFoodVx = Math.cos(toFoodAngle) * foodSpeed;
-          const targetFoodVy = Math.sin(toFoodAngle) * foodSpeed + Math.sin(state.bobPhase * 2) * 6;
+          const targetFoodVy = Math.sin(toFoodAngle) * foodSpeed + Math.sin(state.bobPhase * 1.6) * 4;
 
-          const lerp = Math.min(dt * 6.5, 0.45);
+          const lerp = Math.min(dt * 2.2, 0.16); // relaxed, soft acceleration
           state.vx += (targetFoodVx - state.vx) * lerp;
           state.vy += (targetFoodVy - state.vy) * lerp;
           state.heading = toFoodAngle;
         } else {
-          // At the food point! Swirl happily and bob in an adorable feeding circle
-          state.bobPhase += dt * 6;
-          const swirlAngle = time * 0.0035 + index * 1.15;
-          const swirlRadius = 10 + (index % 6) * 3.5;
+          // At the food point! Soft happy swirl around the sweet nectar
+          state.bobPhase += dt * 4;
+          const swirlAngle = time * 0.0025 + index * 1.15;
+          const swirlRadius = 12 + (index % 5) * 4;
           const targetX = foodState.x + Math.cos(swirlAngle) * swirlRadius;
           const targetY = foodState.y + Math.sin(swirlAngle) * swirlRadius;
 
-          state.vx += (targetX - state.x) * 7 * dt;
-          state.vy += (targetY - state.y) * 7 * dt;
+          state.vx += (targetX - state.x) * 4 * dt;
+          state.vy += (targetY - state.y) * 4 * dt;
           state.heading = swirlAngle + Math.PI / 2;
         }
       } else {
@@ -193,25 +194,38 @@ const CuteAvoidingButterfly: React.FC<{ data: ButterflyData; index: number }> = 
         }
       }
 
-      // 3. Gentle center guidance: Keep butterflies gracefully criss-crossing the middle of the screen
+      // 3. Text Background & Content Card Avoidance:
+      // Steer around the central text card so text is always clear, unobstructed, and readable!
       const centerX = width * 0.5;
       const centerY = height * 0.5;
-      const margin = 50;
+      const cardHalfW = Math.min(width * 0.44, 275);
+      const cardHalfH = Math.min(height * 0.42, 280);
 
-      if (state.x < margin) state.vx += 40 * dt;
-      else if (state.x > width - margin) state.vx -= 40 * dt;
+      const dxCard = state.x - centerX;
+      const dyCard = state.y - centerY;
 
-      if (state.y < margin) state.vy += 40 * dt;
-      else if (state.y > height - margin) state.vy -= 40 * dt;
+      if (!isFeeding && Math.abs(dxCard) < cardHalfW && Math.abs(dyCard) < cardHalfH) {
+        const overlapX = cardHalfW - Math.abs(dxCard);
+        const overlapY = cardHalfH - Math.abs(dyCard);
 
-      // Soft center breeze when drifting too far out
-      const distFromCenter = Math.hypot(state.x - centerX, state.y - centerY);
-      if (distFromCenter > Math.min(width, height) * 0.38) {
-        const toCenterX = (centerX - state.x) / distFromCenter;
-        const toCenterY = (centerY - state.y) / distFromCenter;
-        state.vx += toCenterX * 28 * dt;
-        state.vy += toCenterY * 28 * dt;
+        if (overlapX < overlapY) {
+          const pushDirX = dxCard >= 0 ? 1 : -1;
+          state.vx += pushDirX * (overlapX * 8 + 50) * dt;
+          state.heading = Math.atan2(state.vy, pushDirX * Math.abs(state.vx || 1));
+        } else {
+          const pushDirY = dyCard >= 0 ? 1 : -1;
+          state.vy += pushDirY * (overlapY * 8 + 50) * dt;
+          state.heading = Math.atan2(pushDirY * Math.abs(state.vy || 1), state.vx);
+        }
       }
+
+      // Gentle screen border containment
+      const margin = 40;
+      if (state.x < margin) state.vx += 35 * dt;
+      else if (state.x > width - margin) state.vx -= 35 * dt;
+
+      if (state.y < margin) state.vy += 35 * dt;
+      else if (state.y > height - margin) state.vy -= 35 * dt;
 
       // Update coordinates
       state.x += state.vx * dt;
