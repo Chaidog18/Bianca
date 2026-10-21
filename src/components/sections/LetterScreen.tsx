@@ -104,7 +104,7 @@ export const LetterScreen: React.FC<LetterScreenProps> = ({
                   onClick={() => setShowAllDirectly(true)}
                   className="text-xs text-[#7E22CE] hover:underline cursor-pointer"
                 >
-                  Show entire letter immediately ✨
+                  Show entire letter immediately 
                 </button>
               </div>
             )}
@@ -124,7 +124,7 @@ export const LetterScreen: React.FC<LetterScreenProps> = ({
                 <span>Our Love Story Milestone ♡</span>
               </span>
               <span className="text-[10px] bg-[#EDE9FE] px-2 py-0.5 rounded-full font-medium">
-                Monthsary every month 🌸
+                Monthsary every month 
               </span>
             </div>
           </div>
