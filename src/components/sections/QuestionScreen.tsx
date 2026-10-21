@@ -181,7 +181,7 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
             </div>
 
             <h3 className="font-serif-title text-2xl font-bold text-[#3B0764] mb-2">
-              Nice try, but you can't reject me! 🙈
+              Nice try, but you can't reject me! 
             </h3>
 
             <p className="text-[#581C87] text-sm font-light leading-relaxed mb-6">
@@ -209,7 +209,7 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
                 className="w-full py-2.5 px-4 text-xs font-medium text-[#7E22CE] hover:text-[#581C87] rounded-full hover:bg-[#EDE9FE] transition-colors cursor-pointer flex items-center justify-center gap-1.5"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
-                <span>Try clicking the tiny NO again (it shrinks more!) 🔍</span>
+                <span>Try clicking the tiny NO again (it shrinks more!) </span>
               </button>
             </div>
           </div>
