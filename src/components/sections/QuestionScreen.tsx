@@ -29,18 +29,18 @@ export const QuestionScreen: React.FC<QuestionScreenProps> = ({
 
   // Playful notices that cycle with every click of NO in violet mood
   const funnyMessages = [
-    'wait… are you sure? 🥺',
-    'nuh-uh, that button doesn’t work! 🙈',
-    'the button is shrinking… look! 🔍',
-    'YES is getting bigger for a reason! 💜',
-    'Error 404: Rejection is not supported! ✨',
-    'you’re gonna need a microscope to click that! 🔬',
-    'almost too tiny to touch! 🤏',
-    'resistance is futile, say YES! 🥰',
-    'look how big and pretty the YES button is! 💖',
-    'you clicked NO again?! It just shrunk more! 😹',
-    'there is no escape from my love ♡',
-    'just say yes, I promise to make you happy! 💜',
+    'wait… are you sure? ',
+    'nuh-uh, that button doesn’t work! ',
+    'the button is shrinking… look! ',
+    'YES is getting bigger for a reason! ',
+    'Error 404: Rejection is not supported! ',
+    'you’re gonna need a microscope to click that! ',
+    'almost too tiny to touch! ',
+    'resistance is futile, say YES! ',
+    'look how big and pretty the YES button is! ',
+    'you clicked NO again?! It just shrunk more! ',
+    'there is no escape from my love hehe',
+    'just say yes, I promise to make you happy! for the rest of your life! ',
   ];
 
   // Random dynamic jump offsets that keep NO on screen while avoiding center YES
